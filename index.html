@@ -319,18 +319,30 @@ WhatsApp</a>
 (function () {
   var WHATSAPP = ''; // Numéro WhatsApp de la société au format international, ex. '2126XXXXXXXX'
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Vidéo du camion
+  // Vidéos : lecture automatique, avec relance au premier toucher si le téléphone bloque
+  function prep(el) { if (!el) return; el.muted = true; el.defaultMuted = true; el.playsInline = true; el.setAttribute('muted', ''); el.setAttribute('playsinline', ''); el.setAttribute('webkit-playsinline', ''); }
+  function tryPlay(el) { if (!el) return; var q = el.play(); if (q && q.catch) q.catch(function () {}); }
   var v = document.getElementById('ai-video');
-  if (v && !reduce) { v.muted = true; v.loop = true; v.playsInline = true; var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-  // Logo animé
   var lv = document.getElementById('ai-logo');
-  if (lv) {
-    lv.muted = true; lv.loop = true; lv.playsInline = true;
-    var start = function () { try { lv.currentTime = 0; } catch (e) {} var q = lv.play(); if (q && q.catch) q.catch(function () {}); };
-    if (reduce) { lv.loop = false; lv.addEventListener('loadeddata', function () { try { lv.currentTime = 6; } catch (e) {} }); }
-    else if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) start(); else lv.pause(); }); }, { threshold: 0.35 }).observe(lv);
-    } else start();
+  prep(v); prep(lv);
+  if (v) { v.loop = true; }
+  if (lv) { lv.loop = true; }
+  var logoVisible = false;
+  if (!reduce) {
+    if (v) { tryPlay(v); v.addEventListener('canplay', function () { if (v.paused) tryPlay(v); }); }
+    if (lv) {
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) { es.forEach(function (en) { logoVisible = en.isIntersecting; if (logoVisible) { try { lv.currentTime = 0; } catch (e) {} tryPlay(lv); } else { lv.pause(); } }); }, { threshold: 0.25 }).observe(lv);
+      } else { logoVisible = true; tryPlay(lv); }
+    }
+    var unlock = function () {
+      if (v && v.paused) tryPlay(v);
+      if (lv && lv.paused && logoVisible) tryPlay(lv);
+    };
+    ['touchstart', 'click', 'keydown'].forEach(function (t) { document.addEventListener(t, unlock, { passive: true }); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) unlock(); });
+  } else if (lv) {
+    lv.addEventListener('loadeddata', function () { try { lv.currentTime = 6; } catch (e) {} });
   }
   // Carte : camion sur la route
   var route = document.getElementById('ai-route'), truck = document.getElementById('ai-truck');
