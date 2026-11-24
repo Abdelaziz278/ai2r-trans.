@@ -1,0 +1,25 @@
+SITE AI2R TRANS — VERSION DE PRÉSENTATION
+==========================================
+
+Ce dossier contient tout le site : index.html, les vidéos, les logos et les images.
+Il fonctionne sans base de données (pas de Firebase).
+
+METTRE EN LIGNE EN 2 MINUTES (Netlify Drop, gratuit)
+1. Dézippez ce dossier sur votre ordinateur.
+2. Allez sur https://app.netlify.com/drop
+3. Glissez le dossier « site-ai2r-trans » dans la page.
+4. Netlify donne une adresse du type https://nom-au-hasard.netlify.app : c'est le lien à envoyer au gérant.
+   (Créez un compte gratuit pour garder le site en ligne et changer le nom de l'adresse.)
+
+AUTRE SOLUTION : GITHUB PAGES
+1. Créez un dépôt sur GitHub (ex. ai2r-trans).
+2. Envoyez tout le contenu du dossier (index.html à la racine).
+3. Paramètres > Pages > Branche « main » > Enregistrer.
+4. Adresse : https://VOTRE-COMPTE.github.io/ai2r-trans/
+
+À COMPLÉTER AVANT LA VRAIE MISE EN LIGNE
+- Les textes entre crochets [ ] (chiffres, année, adresse, téléphone, ICE, RC…).
+- Le numéro WhatsApp : dans index.html, cherchez  var WHATSAPP = '';
+  et mettez le numéro au format international sans + ni espaces, ex. '2126XXXXXXXX'.
+  Le formulaire de devis enverra alors la demande directement sur WhatsApp.
+- L'accord des clients pour afficher leurs logos.
